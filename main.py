@@ -130,6 +130,9 @@ summary = pd.DataFrame({
         "Delivered Orders Missing Customer Delivery Date",
         "Missing Carrier Date Among Those Orders",
         "Carrier Date Available Among Those Orders",
+        "Repeated review IDs",
+        "Duplicate review_id + order_id Pairs",
+        "Orders with Multiple Review Rows",
     ],
     "Value": [
         len(master_df),
@@ -139,7 +142,12 @@ summary = pd.DataFrame({
         int(master_df["order_item_id"].isnull().sum()),
         int(((master_df["order_status"] == "delivered") & master_df["order_delivered_customer_date"].isnull()).sum()),
         int(((master_df["order_status"] == "delivered") & master_df["order_delivered_customer_date"].isnull() & master_df["order_delivered_carrier_date"].isnull()).sum()),
-        int(((master_df["order_status"] == "delivered") & master_df["order_delivered_customer_date"].isnull() & master_df["order_delivered_carrier_date"].notnull()).sum())
+       int(((master_df["order_status"] == "delivered") &
+       master_df["order_delivered_customer_date"].isnull() &
+       master_df["order_delivered_carrier_date"].notnull()).sum()),
+       int(reviews["review_id"].duplicated().sum()),
+       int(reviews.duplicated(subset=["review_id", "order_id"]).sum()),
+       int((reviews.groupby("order_id").size() > 1).sum())
     ]
 })
 
