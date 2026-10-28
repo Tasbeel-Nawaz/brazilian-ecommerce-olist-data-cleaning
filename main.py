@@ -126,14 +126,20 @@ summary = pd.DataFrame({
         "Total Columns",
         "Total Missing Cells",
         "Duplicate Rows",
-        "Rows Missing order_item_id"
+        "Rows Missing order_item_id",
+        "Delivered Orders Missing Customer Delivery Date",
+        "Missing Carrier Date Among Those Orders",
+        "Carrier Date Available Among Those Orders",
     ],
     "Value": [
         len(master_df),
         len(master_df.columns),
         int(master_df.isnull().sum().sum()),
         int(master_df.duplicated().sum()),
-        int(master_df["order_item_id"].isnull().sum())
+        int(master_df["order_item_id"].isnull().sum()),
+        int(((master_df["order_status"] == "delivered") & master_df["order_delivered_customer_date"].isnull()).sum()),
+        int(((master_df["order_status"] == "delivered") & master_df["order_delivered_customer_date"].isnull() & master_df["order_delivered_carrier_date"].isnull()).sum()),
+        int(((master_df["order_status"] == "delivered") & master_df["order_delivered_customer_date"].isnull() & master_df["order_delivered_carrier_date"].notnull()).sum())
     ]
 })
 
